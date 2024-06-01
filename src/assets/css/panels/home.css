@@ -95,9 +95,9 @@
 
 .titre-tab-new {
     margin-top: 1rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 0.5rem 1rem;
-    border-radius: 2rem;
+    border-radius: 10px;
     background: var(--background-transparent);
     color: var(--color);
 }
@@ -249,6 +249,7 @@
     align-items: center;
 }
 
+
 .play-instance {
     display: flex;
     justify-content: space-between;
@@ -258,6 +259,7 @@
     border-radius: 15px;
     height: 3.2rem;
     padding-right: 1.9rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Ajoutez cette ligne pour l'animation */
 }
 
 .play-btn {
@@ -269,6 +271,16 @@
     font-weight: bolder;
     padding: 0 1.5rem;
     pointer-events: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.play-instance:hover {
+    transform: scale(1.1); /* Agrandissement du conteneur */
+    box-shadow: 0 0 10px var(--element-color); /* Optionnel : ajout d'une ombre */
+}
+
+.play-instance:hover .play-btn {
+    transform: scale(1); /* Garder la transformation pour le bouton aussi, mais peut être légèrement différent */
 }
 
 .instance-select {

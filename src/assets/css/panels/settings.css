@@ -60,7 +60,7 @@
 }
 
 .settings-elements-box {
-    background: var(--background-element);
+    background: var(--background-transparent);
     width: 80%;
     border-radius: 10px;
     padding: 1.5rem 2rem;
@@ -84,7 +84,7 @@
     font-size: 2rem;
     margin: 1.5rem 0;
     padding: 0.5rem 2rem;
-    border-radius: 2rem;
+    border-radius: 10px;
     text-align: center;
     background: var(--background-transparent);
     color: var(--color);
@@ -119,8 +119,8 @@
 }
 
 .account {
-    background: var(--background-element);
-    border: solid 4px var(--background-element);
+    background: var(--background-transparent);
+    border: solid 4px var(--background-transparent);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -191,7 +191,7 @@
 .delete-profile {
     width: 70px;
     height: 70px;
-    background: var(--background-transparent);
+    background: var(--color);
     border-radius: 15px;
     font-size: 3rem;
     display: flex;

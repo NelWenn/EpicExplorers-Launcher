@@ -2,6 +2,7 @@
  * @author Luuxis
  * @license CC-BY-NC 4.0 - https://creativecommons.org/licenses/by-nc/4.0
  */
+
 import { config, database, logger, changePanel, appdata, setStatus, pkg, popup } from '../utils.js'
 
 const { Launch } = require('minecraft-java-core')
@@ -88,6 +89,22 @@ class Home {
                     </div>`
             newsElement.appendChild(blockNews);
         }
+    }
+
+    getdate(dateString) {
+        // Assumons que la date est au format 'YYYY-MM-DD' ou 'YYYY-MM-DDTHH:mm:ss.sssZ'
+        let date = new Date(dateString);
+        if (isNaN(date)) {
+            console.error(`Invalid date: ${dateString}`);
+            return { day: 'Invalid', month: 'Date' };
+        }
+        
+        let day = date.getDate();
+        let monthIndex = date.getMonth(); // January is 0!
+        let allMonths = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        let month = allMonths[monthIndex];
+
+        return { day, month };
     }
 
     socialLick() {
@@ -330,14 +347,6 @@ class Home {
             console.log(err);
         });
     }
-
-    getdate(e) {
-        let date = new Date(e)
-        let year = date.getFullYear()
-        let month = date.getMonth() + 1
-        let day = date.getDate()
-        let allMonth = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
-        return { year: year, month: allMonth[month - 1], day: day }
-    }
 }
+
 export default Home;
