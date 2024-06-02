@@ -123,6 +123,14 @@
     background: var(--background-transparent);
 }
 
+.rounded-video {
+    border-radius: 10px;
+}
+
+.rounded-avatar {
+    border-radius: 10px;
+}
+
 .news-header {
     display: flex;
     justify-content: space-between;
@@ -150,8 +158,28 @@
     margin: 0 auto;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    aspect-ratio: 16/9;
+    object-fit: cover;
 }
 
+.news-content-video {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.news-content-video video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 .news-content .bbWrapper {
     padding: 0 1.5rem;
     padding-bottom: 1rem;

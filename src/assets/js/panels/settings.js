@@ -6,6 +6,7 @@
 import { changePanel, accountSelect, database, Slider, config, setStatus, popup, appdata, setBackground } from '../utils.js'
 const { ipcRenderer } = require('electron');
 const os = require('os');
+const pkg = require('../package.json');
 
 class Settings {
     static id = "settings";
@@ -15,9 +16,15 @@ class Settings {
         this.navBTN()
         this.accounts()
         this.ram()
-        this.javaPath()
+        //this.javaPath()
         this.resolution()
         this.launcher()
+        this.setLauncherVersion();
+    }
+
+    setLauncherVersion() {
+        let launcherVersionElement = document.querySelector('.launcher-version');
+        launcherVersionElement.textContent = `v${pkg.version}`; // Utilisation de la version depuis le package.json
     }
 
     navBTN() {
@@ -131,7 +138,7 @@ class Settings {
         document.getElementById("free-ram").textContent = `${freeMem} Go`;
 
         let sliderDiv = document.querySelector(".memory-slider");
-        sliderDiv.setAttribute("max", Math.trunc((80 * totalMem) / 100));
+        sliderDiv.setAttribute("max", Math.trunc(totalMem));
 
         let ram = config?.java_config?.java_memory ? {
             ramMin: config.java_config.java_memory.min,
@@ -161,42 +168,42 @@ class Settings {
         });
     }
 
-    async javaPath() {
-        let javaPathText = document.querySelector(".java-path-txt")
-        javaPathText.textContent = `${await appdata()}/${process.platform == 'darwin' ? this.config.dataDirectory : `.${this.config.dataDirectory}`}/runtime`;
+    // async javaPath() {
+    //     let javaPathText = document.querySelector(".java-path-txt")
+    //     javaPathText.textContent = `${await appdata()}/${process.platform == 'darwin' ? this.config.dataDirectory : `.${this.config.dataDirectory}`}/runtime`;
 
-        let configClient = await this.db.readData('configClient')
-        let javaPath = configClient?.java_config?.java_path || 'Utiliser la version de java livre avec le launcher';
-        let javaPathInputTxt = document.querySelector(".java-path-input-text");
-        let javaPathInputFile = document.querySelector(".java-path-input-file");
-        javaPathInputTxt.value = javaPath;
+    //     let configClient = await this.db.readData('configClient')
+    //     let javaPath = configClient?.java_config?.java_path || 'Utiliser la version de java livre avec le launcher';
+    //     let javaPathInputTxt = document.querySelector(".java-path-input-text");
+    //     let javaPathInputFile = document.querySelector(".java-path-input-file");
+    //     javaPathInputTxt.value = javaPath;
 
-        document.querySelector(".java-path-set").addEventListener("click", async () => {
-            javaPathInputFile.value = '';
-            javaPathInputFile.click();
-            await new Promise((resolve) => {
-                let interval;
-                interval = setInterval(() => {
-                    if (javaPathInputFile.value != '') resolve(clearInterval(interval));
-                }, 100);
-            });
+    //     document.querySelector(".java-path-set").addEventListener("click", async () => {
+    //         javaPathInputFile.value = '';
+    //         javaPathInputFile.click();
+    //         await new Promise((resolve) => {
+    //             let interval;
+    //             interval = setInterval(() => {
+    //                 if (javaPathInputFile.value != '') resolve(clearInterval(interval));
+    //             }, 100);
+    //         });
 
-            if (javaPathInputFile.value.replace(".exe", '').endsWith("java") || javaPathInputFile.value.replace(".exe", '').endsWith("javaw")) {
-                let configClient = await this.db.readData('configClient')
-                let file = javaPathInputFile.files[0].path;
-                javaPathInputTxt.value = file;
-                configClient.java_config.java_path = file
-                await this.db.updateData('configClient', configClient);
-            } else alert("Le nom du fichier doit être java ou javaw");
-        });
+    //         if (javaPathInputFile.value.replace(".exe", '').endsWith("java") || javaPathInputFile.value.replace(".exe", '').endsWith("javaw")) {
+    //             let configClient = await this.db.readData('configClient')
+    //             let file = javaPathInputFile.files[0].path;
+    //             javaPathInputTxt.value = file;
+    //             configClient.java_config.java_path = file
+    //             await this.db.updateData('configClient', configClient);
+    //         } else alert("Le nom du fichier doit être java ou javaw");
+    //     });
 
-        document.querySelector(".java-path-reset").addEventListener("click", async () => {
-            let configClient = await this.db.readData('configClient')
-            javaPathInputTxt.value = 'Utiliser la version de java livre avec le launcher';
-            configClient.java_config.java_path = null
-            await this.db.updateData('configClient', configClient);
-        });
-    }
+    //     document.querySelector(".java-path-reset").addEventListener("click", async () => {
+    //         let configClient = await this.db.readData('configClient')
+    //         javaPathInputTxt.value = 'Utiliser la version de java livre avec le launcher';
+    //         configClient.java_config.java_path = null
+    //         await this.db.updateData('configClient', configClient);
+    //     });
+    // }
 
     async resolution() {
         let configClient = await this.db.readData('configClient')

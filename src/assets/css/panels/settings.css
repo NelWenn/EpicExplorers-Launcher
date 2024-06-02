@@ -13,7 +13,12 @@
     justify-content: center;
     font-size: 2.5rem;
 }
-
+.launcher-version {
+    position: absolute;
+    bottom: 1rem;
+    font-size: 0.8rem;
+    color: var(--color);
+}
 .nav-settings p {
     font-size: 60%;
     margin-top: 80px;
@@ -193,7 +198,7 @@
     height: 70px;
     background: var(--color);
     border-radius: 15px;
-    font-size: 3rem;
+    font-size: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;

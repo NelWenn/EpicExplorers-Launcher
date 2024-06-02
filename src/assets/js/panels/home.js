@@ -25,16 +25,32 @@ class Home {
         document.querySelector('.settings-btn').addEventListener('click', e => changePanel('settings'));
     }
 
+    async getPlayerHead(username) {
+        try {
+            let response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`);
+            let data = await response.json();
+            let uuid = data.id;
+            let playerHeadUrl = `https://crafatar.com/avatars/${uuid}?size=32&default=MHF_Steve&overlay`;
+            return playerHeadUrl;
+        } catch (error) {
+            console.error('Erreur lors de la récupération de la tête du joueur :', error);
+            return 'assets/images/icon.png'; // Utiliser l'icône par défaut en cas d'erreur
+        }
+    }
+
+
     async news() {
         let newsElement = document.querySelector('.news-list');
         let news = await config.getNews().then(res => res).catch(err => false);
+        let configClient = await this.db.readData('configClient');
+        let auth = await this.db.readData('accounts', configClient.account_selected);
         if (news) {
             if (!news.length) {
                 let blockNews = document.createElement('div');
                 blockNews.classList.add('news-block');
                 blockNews.innerHTML = `
                     <div class="news-header">
-                        <img class="server-status-icon" src="assets/images/icon.png">
+                        <img class="server-status-icon rounded-avatar" src="assets/images/icon.png">
                         <div class="header-text">
                             <div class="title">Aucun news n'ai actuellement disponible.</div>
                         </div>
@@ -54,9 +70,9 @@ class Home {
                     let date = this.getdate(News.publish_date);
                     let blockNews = document.createElement('div');
                     blockNews.classList.add('news-block');
-                    blockNews.innerHTML = `
+                    let newsContent = `
                         <div class="news-header">
-                            <img class="server-status-icon" src="assets/images/icon.png">
+                            <img class="server-status-icon rounded-avatar" src="${await this.getPlayerHead(News.author)}" alt="${News.author}">
                             <div class="header-text">
                                 <div class="title">${News.title}</div>
                             </div>
@@ -66,13 +82,37 @@ class Home {
                             </div>
                         </div>
                         <div class="news-content">
-                            <div class="bbWrapper">
-                                <img src="${News.image}" alt="${News.title}">
+                            <div class="bbWrapper">`;
+    
+                    if (News.image) {
+                        newsContent += `<img src="${News.image}" alt="${News.title}">`;
+                    }
+    
+                    if (News.video) {
+                        newsContent += `
+                            <div class="news-content-video">
+                                <video controls loop autoplay muted>
+                                    <source src="${News.video}" type="video/mp4">
+                                    Votre navigateur ne prend pas en charge les vidéos.
+                                </video>
+                            </div>`;
+                    }
+    
+                    newsContent += `
                                 <p>${News.content.replace(/\n/g, '</br>')}</p>
                                 <p class="news-author">Auteur - <span>${News.author}</span></p>
                             </div>
                         </div>`;
+    
+                    blockNews.innerHTML = newsContent;
                     newsElement.appendChild(blockNews);
+    
+                    let videoElement = blockNews.querySelector('video');
+                    if (videoElement) {
+                        videoElement.addEventListener('canplaythrough', () => {
+                            videoElement.play();
+                        });
+                    }
                 }
             }
         } else {
@@ -80,7 +120,7 @@ class Home {
             blockNews.classList.add('news-block');
             blockNews.innerHTML = `
                 <div class="news-header">
-                    <img class="server-status-icon" src="assets/images/icon.png">
+                    <img class="server-status-icon rounded-avatar" src="assets/images/icon.png">
                     <div class="header-text">
                         <div class="title">Error.</div>
                     </div>
@@ -97,6 +137,8 @@ class Home {
             newsElement.appendChild(blockNews);
         }
     }
+
+    
 
     getdate(dateString) {
         // Assumons que la date est au format 'YYYY-MM-DD' ou 'YYYY-MM-DDTHH:mm:ss.sssZ'
