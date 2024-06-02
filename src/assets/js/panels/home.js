@@ -13,10 +13,16 @@ class Home {
     async init(config) {
         this.config = config;
         this.db = new database();
-        this.news()
-        this.socialLick()
-        this.instancesSelect()
-        document.querySelector('.settings-btn').addEventListener('click', e => changePanel('settings'))
+        let configClient = await this.db.readData('configClient');
+        let auth = await this.db.readData('accounts', configClient.account_selected);
+        this.userPseudo = auth?.name || 'Utilisateur'; // Utilise le pseudo de l'utilisateur ou 'Utilisateur' par défaut
+        this.news();
+        this.socialLick();
+        this.instancesSelect();
+        this.addSettingsButtonAnimation();
+        document.querySelectorAll('.user-pseudo')[0].textContent = 'Bienvenue';
+        document.querySelectorAll('.user-pseudo')[1].textContent = this.userPseudo;
+        document.querySelector('.settings-btn').addEventListener('click', e => changePanel('settings'));
     }
 
     async news() {
@@ -41,11 +47,11 @@ class Home {
                         <div class="bbWrapper">
                             <p>Vous pourrez suivre ici toutes les news relative au serveur.</p>
                         </div>
-                    </div>`
+                    </div>`;
                 newsElement.appendChild(blockNews);
             } else {
                 for (let News of news) {
-                    let date = this.getdate(News.publish_date)
+                    let date = this.getdate(News.publish_date);
                     let blockNews = document.createElement('div');
                     blockNews.classList.add('news-block');
                     blockNews.innerHTML = `
@@ -61,10 +67,11 @@ class Home {
                         </div>
                         <div class="news-content">
                             <div class="bbWrapper">
+                                <img src="${News.image}" alt="${News.title}">
                                 <p>${News.content.replace(/\n/g, '</br>')}</p>
                                 <p class="news-author">Auteur - <span>${News.author}</span></p>
                             </div>
-                        </div>`
+                        </div>`;
                     newsElement.appendChild(blockNews);
                 }
             }
@@ -73,20 +80,20 @@ class Home {
             blockNews.classList.add('news-block');
             blockNews.innerHTML = `
                 <div class="news-header">
-                        <img class="server-status-icon" src="assets/images/icon.png">
-                        <div class="header-text">
-                            <div class="title">Error.</div>
-                        </div>
-                        <div class="date">
-                            <div class="day">1</div>
-                            <div class="month">Janvier</div>
-                        </div>
+                    <img class="server-status-icon" src="assets/images/icon.png">
+                    <div class="header-text">
+                        <div class="title">Error.</div>
                     </div>
-                    <div class="news-content">
-                        <div class="bbWrapper">
-                            <p>Impossible de contacter le serveur des news.</br>Merci de vérifier votre configuration.</p>
-                        </div>
-                    </div>`
+                    <div class="date">
+                        <div class="day">1</div>
+                        <div class="month">Janvier</div>
+                    </div>
+                </div>
+                <div class="news-content">
+                    <div class="bbWrapper">
+                        <p>Impossible de contacter le serveur des news.</br>Merci de vérifier votre configuration.</p>
+                    </div>
+                </div>`;
             newsElement.appendChild(blockNews);
         }
     }
@@ -212,6 +219,17 @@ class Home {
         })
 
         instanceCloseBTN.addEventListener('click', () => instancePopup.style.display = 'none')
+    }
+
+    addSettingsButtonAnimation() {
+        if (!this.hasPlayedAnimation) {
+            this.hasPlayedAnimation = true;
+            document.querySelector('.settings-btn').classList.add('animate-settings-btn');
+        }
+    }
+
+    removeSettingsButtonAnimation() {
+        document.querySelector('.settings-btn').classList.remove('animate-settings-btn');
     }
 
     async startGame() {

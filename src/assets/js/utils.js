@@ -7,6 +7,9 @@ const { ipcRenderer } = require('electron')
 const { Status } = require('minecraft-java-core')
 const fs = require('fs');
 const pkg = require('../package.json');
+const { Client } = require('discord-rpc');
+const rpc = new Client({ transport: 'ipc' });
+const clientId = '1193220212082880552';
 
 import config from './utils/config.js';
 import database from './utils/database.js';
@@ -22,19 +25,24 @@ async function setBackground(theme) {
         theme = configClient?.launcher_config?.theme || "auto"
         theme = await ipcRenderer.invoke('is-dark-theme', theme).then(res => res)
     }
-    let background
+    let background;
     let body = document.body;
     body.className = theme ? 'dark global' : 'light global';
-    if (fs.existsSync(`${__dirname}/assets/images/background/easterEgg`) && Math.random() < 0.005) {
-        let backgrounds = fs.readdirSync(`${__dirname}/assets/images/background/easterEgg`);
-        let Background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-        background = `url(./assets/images/background/easterEgg/${Background})`;
-    } else if (fs.existsSync(`${__dirname}/assets/images/background/${theme ? 'dark' : 'light'}`)) {
-        let backgrounds = fs.readdirSync(`${__dirname}/assets/images/background/${theme ? 'dark' : 'light'}`);
-        let Background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-        background = `linear-gradient(#00000080, #00000080), url(./assets/images/background/${theme ? 'dark' : 'light'}/${Background})`;
+
+    try {
+        if (fs.existsSync(`${__dirname}/assets/images/background/${theme ? 'dark' : 'light'}/1.png`)) {
+            background = `url(./assets/images/background/${theme ? 'dark' : 'light'}/1.png)`;
+        } else {
+            // Si le fichier 1.png n'existe pas, utiliser une couleur de fond par défaut
+            background = theme ? '#000' : '#fff';
+        }
+    } catch (error) {
+        console.error('Error loading background:', error);
+        // En cas d'erreur, utiliser une couleur de fond par défaut
+        background = theme ? '#000' : '#fff';
     }
-    body.style.backgroundImage = background ? background : theme ? '#000' : '#fff';
+
+    body.style.backgroundImage = background;
     body.style.backgroundSize = 'cover';
 }
 
@@ -113,6 +121,27 @@ async function setStatus(opt) {
     }
 }
 
+async function setRichPresence() {
+    try {
+        await rpc.login({ clientId });
+        rpc.setActivity({
+            details: 'Beyond the Horizon',
+            state: 'Bienvenue sur le launcher',
+            startTimestamp: new Date(),
+            largeImageKey: 'icon',
+            largeImageText: 'EpicExplorers',
+            smallImageKey: 'group_6',
+            smallImageText: 'Launcher',
+            buttons: [
+                { label: 'Site Web', url: 'https://epicexplorers.fr' },
+                { label: 'Télécharger le launcher', url: 'https://epicexplorers.fr/telecharger' }
+            ]
+        });
+    } catch (error) {
+        console.error('Erreur lors de la configuration du Rich Presence:', error);
+    }
+}
+
 
 export {
     appdata as appdata,
@@ -127,5 +156,6 @@ export {
     accountSelect as accountSelect,
     slider as Slider,
     pkg as pkg,
-    setStatus as setStatus
+    setStatus as setStatus,
+    setRichPresence as setRichPresence
 }
