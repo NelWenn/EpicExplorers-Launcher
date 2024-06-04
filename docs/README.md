@@ -14,7 +14,7 @@ Le EpicExplorers Launcher est un outil conçu pour faciliter l'accès et l'utili
 
 ## Installation
 
-1. Téléchargez la dernière version du launcher sur la [page de téléchargement](https://launcher.epicexplorers.fr).
+1. Téléchargez la dernière version du launcher .
 2. Exécutez le fichier d'installation.
 3. Suivez les instructions à l'écran pour terminer l'installation.
 
