@@ -1,6 +1,6 @@
 # EpicExplorers Launcher
 
-![EpicExplorers Launcher](https://epicexplorers.fr/wp-content/uploads/2024/05/icon.png)
+![EpicExplorers Launcher](https://epicexplorers.fr/wp-content/uploads/2024/06/icon.png)
 
 Le EpicExplorers Launcher est un outil conçu pour faciliter l'accès et l'utilisation du serveur Minecraft EpicExplorers. Il offre une interface intuitive et des fonctionnalités avancées pour une expérience de jeu optimale.
 
