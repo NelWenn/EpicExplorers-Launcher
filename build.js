@@ -81,11 +81,12 @@ class Index {
                     target: [{
                         target: "nsis",
                         arch: "x64"
-                    }]
+                    }],
+                    allowToChangeInstallationDirectory: true
                 },
                 nsis: {
                     oneClick: true,
-                    allowToChangeInstallationDirectory: false,
+                    allowToChangeInstallationDirectory: true,
                     createDesktopShortcut: true,
                     runAfterFinish: true
                 },
@@ -100,14 +101,16 @@ class Index {
                     {
                         target: "zip",
                         arch: "universal"
-                    }]
+                    }],
+                    allowAnywhere: true
                 },
                 linux: {
                     icon: "./app/assets/images/icon.png",
                     target: [{
                         target: "AppImage",
                         arch: "x64"
-                    }]
+                    }],
+                    allowAnywhere: true
                 }
             }
         }).then(() => {
