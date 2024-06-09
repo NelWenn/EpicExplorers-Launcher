@@ -38,7 +38,6 @@
         "nodemon": "^3.1.0",
         "png2icons": "^2.0.1"
     },
-    
     "repository": {
         "type": "git",
         "url": "git+https://github.com/NelWenn/EpicExplorers-Launcher.git"
