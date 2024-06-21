@@ -25,25 +25,48 @@ async function setBackground(theme) {
         theme = configClient?.launcher_config?.theme || "auto"
         theme = await ipcRenderer.invoke('is-dark-theme', theme).then(res => res)
     }
-    let background;
     let body = document.body;
     body.className = theme ? 'dark global' : 'light global';
 
-    try {
-        if (fs.existsSync(`${__dirname}/assets/images/background/${theme ? 'dark' : 'light'}/1.png`)) {
-            background = `url(./assets/images/background/${theme ? 'dark' : 'light'}/1.png)`;
-        } else {
-            // Si le fichier 1.png n'existe pas, utiliser une couleur de fond par défaut
-            background = theme ? '#000' : '#fff';
-        }
-    } catch (error) {
-        console.error('Error loading background:', error);
-        // En cas d'erreur, utiliser une couleur de fond par défaut
-        background = theme ? '#000' : '#fff';
-    }
+    // Définir les styles pour les thèmes sombre et clair
+    const darkTheme = {
+        backgroundColor: 'hsla(213,26%,40%,1)',
+        backgroundImage: `
+            radial-gradient(at 73% 81%, hsla(230,20%,22%,1) 0px, transparent 50%),
+            radial-gradient(at 10% 13%, hsla(230,20%,22%,1) 0px, transparent 50%)
+        `
+    };
 
-    body.style.backgroundImage = background;
-    body.style.backgroundSize = 'cover';
+    const lightTheme = {
+        backgroundColor: 'hsla(32,55%,75%,1)',
+        backgroundImage: `
+            radial-gradient(at 73% 81%, hsla(30,28%,60%,1) 0px, transparent 50%),
+            radial-gradient(at 10% 13%, hsla(30,45%,82%,1) 0px, transparent 50%)
+        `
+    };
+
+    const currentTheme = theme ? darkTheme : lightTheme;
+
+    // Appliquer le style directement sur le body
+    body.style.backgroundColor = currentTheme.backgroundColor;
+    body.style.backgroundImage = currentTheme.backgroundImage;
+    body.style.backgroundSize = '200% 200%';
+    body.style.animation = 'gradient 13s ease infinite';
+
+    // Ajouter l'animation keyframes si elle n'existe pas déjà
+    if (!document.querySelector('#gradientAnimation')) {
+        const style = document.createElement('style');
+        style.id = 'gradientAnimation';
+        style.textContent = `
+            @keyframes gradient {
+                0% { background-position: 0% 20%; }
+                25% { background-position: 100% 50%; }
+                50% { background-position: 50% 70%; }
+                100% { background-position: 0% 20%; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 async function changePanel(id) {

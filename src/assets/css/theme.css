@@ -1,12 +1,12 @@
 .global {
-    --element-color: #606C38;
+    --element-color: #4B6382;
     --transition: all 0.5s cubic-bezier(1, 0.46, 0, 1.29);
     --dark-color: #1B1C18;
-    --light-color: #FEFAE0;
+    --light-color: #E3C39D;
 }
 
 .dark {
-    --color: #FEFAE0;
+    --color: #E3C39D;
     --background: #1B1C18;
     --background-element: #424242;
     --background-transparent: #2c2c2ccc;
@@ -16,7 +16,7 @@
 
 .light {
     --color: #151515;
-    --background: #FEFAE0;
+    --background: #E3C39D;
     --background-element: #cdc9b0;
     --background-transparent: rgba(254, 250, 224, 0.8);
     --shadow: rgba(208, 208, 208, 0.7);

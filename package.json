@@ -1,8 +1,8 @@
 {
     "name": "EpicExplorers-Launcher",
-    "preductname": "EpicExplorers Launcher",
-    "version": "1.0.2",
-    "description": "Launcher Minecraft pour le serveur EpicExplorers",
+    "preductname": "Epic. Launcher",
+    "version": "1.0.3",
+    "description": "Launcher pour les serveurs de Epic.",
     "main": "src/app.js",
     "author": {
         "name": "luuxis, NelWenn",
